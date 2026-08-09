@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Domínio Store</title>
+    <link rel="stylesheet" href="estilo-visual/vitrine.css">
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo">
+            <svg height="24" width="60" viewBox="0 0 24 24" fill="#111"><path d="M21 6.5c-2.3 0-6.1 1.7-8.1 3.5L8 14.2c-1 .9-1.5 2-1.2 3.1.4 1.4 2 2 3.7 1.4 1.7-.6 4-3.1 7.2-7.4 2.1-2.9 3.2-4.8 3.3-4.8z"/></svg>
+        </div>
+
+        <h2>SUA CONTA PARA TUDO DA DOMÍNIO STORE</h2>
+
+        <form id="signup-form">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Endereço de e-mail" required>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="senha" placeholder="Senha" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="nome" placeholder="Nome" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="sobrenome" placeholder="Sobrenome" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="dataNascimento" placeholder="Data de nascimento (DD/MM/AAAA)" required>
+            </div>
+            <p class="terms">
+                Ao criar uma conta, você concorda com a <a href="#">Política de Privacidade</a> e com os <a href="#">Termos de Uso</a> da Domínio Store.
+            </p>
+            <button type="submit" class="btn-submit">CRIAR CONTA</button>
+        </form>
+        <p class="signup-link">Já tem uma conta? <a href="login.html">Entrar</a></p>
+        <p class="signup-link"><a href="index.html">Voltar para a vitrine</a></p>
+    </div>
+    <script src="scripts-js/config.js"></script>
+    <script src="scripts-js/auth.js"></script>
+</body>
+</html>
