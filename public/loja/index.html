@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domínio Store - Celulares e Smartphones</title>
+    <meta name="description" content="Vitrine oficial da Domínio Store: compre smartphones premium, intermediários e de entrada com estoque em tempo real.">
+    <meta property="og:title" content="Domínio Store - Celulares e Smartphones">
+    <meta property="og:description" content="Compre smartphones na Domínio Store com estoque em tempo real e checkout rápido.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="estilo-visual/vitrine.css">
+</head>
+<body>
+    <header class="topo">
+        <a class="marca" href="index.html">
+            <svg height="22" width="24" viewBox="0 0 24 24" fill="#111"><path d="M21 6.5c-2.3 0-6.1 1.7-8.1 3.5L8 14.2c-1 .9-1.5 2-1.2 3.1.4 1.4 2 2 3.7 1.4 1.7-.6 4-3.1 7.2-7.4 2.1-2.9 3.2-4.8 3.3-4.8z"/></svg>
+            DOMÍNIO STORE
+        </a>
+        <nav>
+            <a href="index.html">Vitrine</a>
+            <a href="#secao-pedidos">Meus pedidos</a>
+            <a href="dashboard.html" id="link-painel" style="display:none">Painel</a>
+        </nav>
+        <div class="topo-direita">
+            <button class="btn-carrinho" id="btn-carrinho">
+                Carrinho <span id="carrinho-contador">0</span>
+            </button>
+            <div id="area-usuario"></div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Os melhores celulares da Domínio Store</h1>
+        <p>Aparelhos selecionados, estoque atualizado em tempo real e compra em poucos cliques.</p>
+    </section>
+
+    <main class="conteudo">
+        <div id="aviso-api"></div>
+
+        <div class="barra-filtros">
+            <input type="search" id="campo-busca" placeholder="Buscar por nome ou especificação...">
+            <select id="filtro-categoria">
+                <option value="todas">Todas as categorias</option>
+            </select>
+            <select id="filtro-disponibilidade">
+                <option value="todos">Todos</option>
+                <option value="disponiveis">Somente disponíveis</option>
+                <option value="indisponiveis">Somente indisponíveis</option>
+            </select>
+            <span id="contador-produtos"></span>
+        </div>
+
+        <div class="grade-produtos" id="grade-produtos"></div>
+
+        <section id="secao-pedidos">
+            <h2>Meus pedidos</h2>
+            <div id="lista-pedidos"></div>
+        </section>
+    </main>
+
+    <aside class="carrinho-painel" id="carrinho-painel">
+        <div class="carrinho-topo">
+            <h3>Seu carrinho</h3>
+            <button id="btn-fechar-carrinho" aria-label="Fechar carrinho">&times;</button>
+        </div>
+        <div id="carrinho-itens"></div>
+        <div class="carrinho-rodape">
+            <div class="carrinho-total-linha">
+                <span>Total</span>
+                <span id="carrinho-total">R$ 0,00</span>
+            </div>
+            <button class="btn-submit" id="btn-finalizar">FINALIZAR COMPRA</button>
+            <div id="carrinho-aviso" style="display:none"></div>
+        </div>
+    </aside>
+
+    <footer class="rodape-site">
+        Domínio Store © 2026 — Front-end na Vercel, API Node.js/Express no Render.
+    </footer>
+
+    <script src="scripts-js/config.js"></script>
+    <script src="scripts-js/vitrine.js"></script>
+</body>
+</html>
