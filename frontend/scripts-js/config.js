@@ -1,4 +1,9 @@
+// Endereço da API real (Node.js/Express no Render).
 const API_URL = "https://dominio-store-api.onrender.com";
+
+// true  = usa a API local do navegador (scripts-js/api-local.js) — funciona sem servidor.
+// false = usa a API real hospedada em API_URL.
+const USAR_API_LOCAL = true;
 
 const STORAGE_TOKEN = "dominio_store_token";
 const STORAGE_USUARIO = "dominio_store_usuario";
@@ -41,6 +46,11 @@ function formatarPreco(valor) {
 
 async function api(caminho, opcoes) {
   const config = opcoes || {};
+
+  if (USAR_API_LOCAL) {
+    return apiLocal(caminho, config);
+  }
+
   const headers = config.headers ? Object.assign({}, config.headers) : {};
   const token = obterToken();
 
