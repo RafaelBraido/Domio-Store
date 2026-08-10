@@ -1,66 +1,3 @@
-const CATALOGO_DEMONSTRACAO = [
-  {
-    _id: "demo-1",
-    nome: "Domínio X15 Pro Max",
-    descricao: "6.8\" OLED 120Hz, 512GB, 12GB RAM, câmera tripla de 200MP.",
-    preco: 7499.9,
-    estoque: 12,
-    categoria: "Premium",
-    status: "ativo",
-    imagem: ""
-  },
-  {
-    _id: "demo-2",
-    nome: "Domínio X15",
-    descricao: "6.4\" AMOLED, 256GB, 8GB RAM, bateria de 5000mAh.",
-    preco: 4299.9,
-    estoque: 30,
-    categoria: "Premium",
-    status: "ativo",
-    imagem: ""
-  },
-  {
-    _id: "demo-3",
-    nome: "Domínio Air Lite",
-    descricao: "6.1\" LCD, 128GB, 6GB RAM, carregamento rápido 33W.",
-    preco: 1899.9,
-    estoque: 54,
-    categoria: "Intermediário",
-    status: "ativo",
-    imagem: ""
-  },
-  {
-    _id: "demo-4",
-    nome: "Domínio Neo Fold",
-    descricao: "Dobrável 7.6\", 1TB, 16GB RAM, dupla tela dinâmica.",
-    preco: 11999.9,
-    estoque: 0,
-    categoria: "Premium",
-    status: "ativo",
-    imagem: ""
-  },
-  {
-    _id: "demo-5",
-    nome: "Domínio Essential 5G",
-    descricao: "6.5\" 90Hz, 128GB, 4GB RAM, 5G e NFC.",
-    preco: 1299.9,
-    estoque: 88,
-    categoria: "Entrada",
-    status: "ativo",
-    imagem: ""
-  },
-  {
-    _id: "demo-6",
-    nome: "Domínio Ultra Camera",
-    descricao: "6.7\" AMOLED, 256GB, sensor periscópio com zoom óptico 10x.",
-    preco: 5899.9,
-    estoque: 7,
-    categoria: "Premium",
-    status: "ativo",
-    imagem: ""
-  }
-];
-
 let catalogo = [];
 let carrinho = [];
 
@@ -97,10 +34,12 @@ function renderizarHeader() {
   if (!area) return;
 
   if (usuario) {
+    const avatar = usuario.foto
+      ? '<img class="usuario-foto" src="' + usuario.foto + '" alt="Foto de ' + usuario.nome + '">'
+      : '<span class="usuario-chip">' + iniciaisDoNome(usuario.nome + " " + (usuario.sobrenome || "")) + "</span>";
     area.innerHTML =
-      '<span class="usuario-chip">' +
-      iniciaisDoNome(usuario.nome + " " + (usuario.sobrenome || "")) +
-      "</span>" +
+      avatar +
+      '<a class="btn-ghost" href="perfil.html">Minha conta</a>' +
       '<span class="usuario-nome">' +
       usuario.nome +
       "</span>" +
@@ -229,18 +168,33 @@ function renderizarVitrine() {
   });
 }
 
+function avisarCarrinho(mensagem, tipo) {
+  const aviso = document.getElementById("carrinho-aviso");
+  mostrarAviso(aviso, mensagem, tipo);
+}
+
 function adicionarAoCarrinho(id) {
   const produto = catalogo.find(function achar(item) {
     return String(item._id) === String(id);
   });
-  if (!produto || produto.estoque <= 0 || produto.status !== "ativo") return;
+  if (!produto) return;
+  if (produto.status !== "ativo" || produto.estoque <= 0) {
+    avisarCarrinho(produto.nome + " está sem estoque.", "erro");
+    abrirCarrinho(true);
+    return;
+  }
 
   const existente = carrinho.find(function achar(item) {
     return String(item.celular) === String(id);
   });
 
   if (existente) {
-    if (existente.quantidade >= produto.estoque) return;
+    // Só permite adicionar se ainda existir estoque suficiente.
+    if (existente.quantidade + 1 > produto.estoque) {
+      avisarCarrinho("Estoque máximo de " + produto.nome + ": " + produto.estoque + " unidade(s).", "erro");
+      abrirCarrinho(true);
+      return;
+    }
     existente.quantidade += 1;
   } else {
     carrinho.push({
@@ -253,6 +207,7 @@ function adicionarAoCarrinho(id) {
 
   persistirCarrinho();
   renderizarCarrinho();
+  avisarCarrinho(produto.nome + " adicionado ao carrinho.", "sucesso");
   abrirCarrinho(true);
 }
 
@@ -261,6 +216,16 @@ function alterarQuantidade(id, delta) {
     return String(linha.celular) === String(id);
   });
   if (!item) return;
+
+  const produto = catalogo.find(function achar(linha) {
+    return String(linha._id) === String(id);
+  });
+  const estoqueDisponivel = produto ? produto.estoque : item.quantidade;
+
+  if (delta > 0 && item.quantidade + delta > estoqueDisponivel) {
+    avisarCarrinho("Só há " + estoqueDisponivel + " unidade(s) em estoque.", "erro");
+    return;
+  }
 
   item.quantidade += delta;
   if (item.quantidade <= 0) {
@@ -363,6 +328,9 @@ async function finalizarPedido() {
     persistirCarrinho();
     renderizarCarrinho();
     mostrarAviso(aviso, "Pedido criado! Total " + formatarPreco(resposta.pedido.valorTotal), "sucesso");
+    setTimeout(function fechar() {
+      document.getElementById("carrinho-painel").classList.remove("aberto");
+    }, 1500);
     carregarMeusPedidos();
     carregarCatalogo();
   } catch (erro) {
@@ -446,14 +414,13 @@ async function carregarCatalogo() {
 
   try {
     const dados = await api("/api/celulares");
-    catalogo = Array.isArray(dados) && dados.length > 0 ? dados : CATALOGO_DEMONSTRACAO;
+    catalogo = Array.isArray(dados) ? dados : [];
     if (avisoApi) avisoApi.style.display = "none";
   } catch (erro) {
-    catalogo = CATALOGO_DEMONSTRACAO;
+    catalogo = [];
     if (avisoApi) {
       avisoApi.style.display = "block";
-      avisoApi.textContent =
-        "API indisponível no momento — exibindo catálogo de demonstração da Domínio Store.";
+      avisoApi.textContent = "Não foi possível carregar o catálogo: " + erro.message;
     }
   }
 
