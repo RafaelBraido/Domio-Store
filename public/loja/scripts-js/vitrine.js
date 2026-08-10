@@ -328,6 +328,9 @@ async function finalizarPedido() {
     persistirCarrinho();
     renderizarCarrinho();
     mostrarAviso(aviso, "Pedido criado! Total " + formatarPreco(resposta.pedido.valorTotal), "sucesso");
+    setTimeout(function fechar() {
+      document.getElementById("carrinho-painel").classList.remove("aberto");
+    }, 1500);
     carregarMeusPedidos();
     carregarCatalogo();
   } catch (erro) {
