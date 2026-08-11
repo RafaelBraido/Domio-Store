@@ -1,86 +1,108 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domínio Store - Celulares e Smartphones</title>
-    <meta name="description" content="Vitrine oficial da Domínio Store: compre smartphones premium, intermediários e de entrada com estoque em tempo real.">
-    <meta property="og:title" content="Domínio Store - Celulares e Smartphones">
-    <meta property="og:description" content="Compre smartphones na Domínio Store com estoque em tempo real e checkout rápido.">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <link rel="stylesheet" href="estilo-visual/vitrine.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domínio Store - Celulares e Smartphones</title>
+  <meta name="description" content="Compre smartphones na Domínio Store: estoque em tempo real, negociação com o vendedor e pagamento por Pix.">
+  <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-    <header class="topo">
-        <a class="marca" href="index.html">
-            <svg height="22" width="24" viewBox="0 0 24 24" fill="#111"><path d="M21 6.5c-2.3 0-6.1 1.7-8.1 3.5L8 14.2c-1 .9-1.5 2-1.2 3.1.4 1.4 2 2 3.7 1.4 1.7-.6 4-3.1 7.2-7.4 2.1-2.9 3.2-4.8 3.3-4.8z"/></svg>
-            DOMÍNIO STORE
-        </a>
-        <nav>
-            <a href="index.html">Vitrine</a>
-            <a href="#secao-pedidos">Meus pedidos</a>
-            <a href="dashboard.html" id="link-painel" style="display:none">Painel</a>
-        </nav>
-        <div class="topo-direita">
-            <button class="btn-carrinho" id="btn-carrinho">
-                Carrinho <span id="carrinho-contador">0</span>
-            </button>
-            <div id="area-usuario"></div>
-        </div>
-    </header>
+  <header class="topo">
+    <a class="marca" href="index.html">DOMÍNIO STORE</a>
+    <nav>
+      <a href="index.html">Vitrine</a>
+      <a href="#meus-pedidos">Meus pedidos</a>
+      <a href="admin.html" id="link-admin" style="display:none">Painel</a>
+    </nav>
+    <div class="topo-direita">
+      <button class="btn btn-claro" id="btn-carrinho">Carrinho (<span id="contador-carrinho">0</span>)</button>
+      <div id="area-usuario" class="topo-direita"></div>
+    </div>
+  </header>
 
-    <section class="hero">
-        <h1>Os melhores celulares da Domínio Store</h1>
-        <p>Aparelhos selecionados, estoque atualizado em tempo real e compra em poucos cliques.</p>
+  <section class="hero">
+    <h1>Os melhores celulares da Domínio Store</h1>
+    <p>Escolha seu aparelho, negocie com o vendedor e pague no Pix.</p>
+  </section>
+
+  <main class="conteudo">
+    <div class="filtros">
+      <input type="search" id="busca" placeholder="Buscar por nome ou especificação...">
+      <select id="filtro-categoria"></select>
+      <select id="filtro-disponibilidade">
+        <option value="todos">Todos</option>
+        <option value="disponiveis">Somente disponíveis</option>
+        <option value="indisponiveis">Somente indisponíveis</option>
+      </select>
+      <span class="etiqueta" id="contador"></span>
+    </div>
+
+    <div class="grade" id="grade"></div>
+
+    <section id="meus-pedidos">
+      <h2>Meus pedidos</h2>
+      <div id="lista-pedidos"></div>
     </section>
+  </main>
 
-    <main class="conteudo">
-        <div id="aviso-api"></div>
+  <aside class="carrinho" id="carrinho">
+    <div class="carrinho-topo">
+      <h3>Seu carrinho</h3>
+      <button class="btn btn-claro" id="btn-fechar-carrinho">Fechar</button>
+    </div>
+    <div class="carrinho-itens" id="carrinho-itens"></div>
+    <div class="carrinho-rodape">
+      <div id="aviso-carrinho" style="display:none"></div>
+      <div class="total"><span>Total</span><span id="total-carrinho">R$ 0,00</span></div>
+      <button class="btn btn-bloco" id="btn-checkout">FINALIZAR COMPRA</button>
+    </div>
+  </aside>
 
-        <div class="barra-filtros">
-            <input type="search" id="campo-busca" placeholder="Buscar por nome ou especificação...">
-            <select id="filtro-categoria">
-                <option value="todas">Todas as categorias</option>
-            </select>
-            <select id="filtro-disponibilidade">
-                <option value="todos">Todos</option>
-                <option value="disponiveis">Somente disponíveis</option>
-                <option value="indisponiveis">Somente indisponíveis</option>
-            </select>
-            <span id="contador-produtos"></span>
+  <!-- Modal de checkout: 1) cidade + vendedor  2) Pix  3) confirmação -->
+  <div class="modal" id="modal-pagamento">
+    <div class="modal-caixa">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2>Checkout</h2>
+        <button class="btn btn-claro" id="btn-fechar-modal">X</button>
+      </div>
+
+      <div id="aviso-checkout" style="display:none"></div>
+
+      <section class="passo ativo" data-passo="1">
+        <h3>1. Cidade e negociação</h3>
+        <p>Selecione sua cidade e fale com o vendedor <strong id="numero-vendedor"></strong> para combinar entrega e valores.</p>
+        <div class="campo">
+          <label for="cidade">Cidade de entrega</label>
+          <select id="cidade"></select>
         </div>
+        <p>Total do carrinho: <strong id="valor-pagar">R$ 0,00</strong></p>
+        <button class="btn btn-bloco btn-claro" id="btn-whatsapp">FALAR COM O VENDEDOR NO WHATSAPP</button>
+        <button class="btn btn-bloco" id="btn-ir-pagamento" disabled>IR PARA O PAGAMENTO</button>
+      </section>
 
-        <div class="grade-produtos" id="grade-produtos"></div>
+      <section class="passo" data-passo="2">
+        <h3>2. Pagamento via Pix</h3>
+        <p>Escaneie o QR Code abaixo com o aplicativo do seu banco e informe o valor <strong id="valor-pix"></strong>.</p>
+        <img class="qr" src="img/pix.jpg" alt="QR Code Pix da Domínio Store">
+        <p>Nome: <strong id="nome-pix"></strong></p>
+        <p style="word-break:break-all">Chave Pix: <strong id="chave-pix"></strong></p>
+        <button class="btn btn-bloco" id="btn-ja-paguei">JÁ FIZ O PAGAMENTO</button>
+      </section>
 
-        <section id="secao-pedidos">
-            <h2>Meus pedidos</h2>
-            <div id="lista-pedidos"></div>
-        </section>
-    </main>
+      <section class="passo" data-passo="3">
+        <h3>3. Pedido registrado!</h3>
+        <p>Seu pedido foi criado com status <strong>PENDENTE</strong> e o estoque já foi reservado. O vendedor confirma o pagamento e finaliza o pedido no painel.</p>
+        <button class="btn btn-bloco" id="btn-fim">FECHAR</button>
+      </section>
+    </div>
+  </div>
 
-    <aside class="carrinho-painel" id="carrinho-painel">
-        <div class="carrinho-topo">
-            <h3>Seu carrinho</h3>
-            <button id="btn-fechar-carrinho" aria-label="Fechar carrinho">&times;</button>
-        </div>
-        <div id="carrinho-itens"></div>
-        <div class="carrinho-rodape">
-            <div class="carrinho-total-linha">
-                <span>Total</span>
-                <span id="carrinho-total">R$ 0,00</span>
-            </div>
-            <button class="btn-submit" id="btn-finalizar">FINALIZAR COMPRA</button>
-            <div id="carrinho-aviso" style="display:none"></div>
-        </div>
-    </aside>
+  <footer class="rodape">Domínio Store © 2026 — Front-end estático + API Node.js/Express.</footer>
 
-    <footer class="rodape-site">
-        Domínio Store © 2026 — Front-end na Vercel, API Node.js/Express no Render.
-    </footer>
-
-    <script src="scripts-js/config.js"></script>
-    <script src="scripts-js/api-local.js"></script>
-    <script src="scripts-js/vitrine.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api-local.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/vitrine.js"></script>
 </body>
 </html>

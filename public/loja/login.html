@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrar - Domínio Store</title>
-    <link rel="stylesheet" href="estilo-visual/vitrine.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar - Domínio Store</title>
+  <meta name="description" content="Acesse sua conta da Domínio Store para comprar celulares e acompanhar seus pedidos.">
+  <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo">
-            <svg height="24" width="60" viewBox="0 0 24 24" fill="#111"><path d="M21 6.5c-2.3 0-6.1 1.7-8.1 3.5L8 14.2c-1 .9-1.5 2-1.2 3.1.4 1.4 2 2 3.7 1.4 1.7-.6 4-3.1 7.2-7.4 2.1-2.9 3.2-4.8 3.3-4.8z"/></svg>
-        </div>
-
-        <h2>ENTRAR EM SUA CONTA DA DOMÍNIO STORE</h2>
-
-        <form id="login-form">
-            <div class="input-group">
-                <input type="email" id="login-email" placeholder="Endereço de e-mail" required>
-            </div>
-
-            <div class="input-group">
-                <input type="password" id="login-senha" placeholder="Sua senha" required>
-            </div>
-            <button type="submit" class="btn-login">ENTRAR EM SUA CONTA</button>
-            <p class="signup-link">
-                Não tem uma conta? <a href="cadastro.html">Criar conta</a>
-            </p>
-        </form>
-        <p class="signup-link"><a href="index.html">Voltar para a vitrine</a></p>
-    </div>
-    <script src="scripts-js/config.js"></script>
-    <script src="scripts-js/api-local.js"></script>
-    <script src="scripts-js/auth.js"></script>
+  <div class="caixa-form">
+    <h2>ENTRAR NA DOMÍNIO STORE</h2>
+    <div id="aviso" style="display:none"></div>
+    <form id="form-login">
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" required>
+      </div>
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" required>
+      </div>
+      <button type="submit" class="btn btn-bloco">ENTRAR</button>
+    </form>
+    <p class="link-abaixo">Não tem conta? <a href="cadastro.html">Criar conta</a></p>
+    <p class="link-abaixo">Admin de demonstração: <strong>admin@dominio.com</strong> / <strong>admin123</strong></p>
+    <p class="link-abaixo"><a href="index.html">Voltar para a vitrine</a></p>
+  </div>
+  <script src="js/config.js"></script>
+  <script src="js/api-local.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/auth.js"></script>
 </body>
 </html>
