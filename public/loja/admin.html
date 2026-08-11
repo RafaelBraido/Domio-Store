@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do administrador - Domínio Store</title>
+  <meta name="description" content="Painel administrativo da Domínio Store: indicadores, produtos, pedidos e usuários.">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="index.html">DOMÍNIO STORE</a>
+    <nav>
+      <a href="index.html">Vitrine</a>
+      <a href="admin.html">Painel</a>
+      <a href="perfil.html">Minha conta</a>
+    </nav>
+    <div class="topo-direita">
+      <span class="etiqueta" id="nome-admin"></span>
+      <button class="btn btn-claro" id="btn-sair">Sair</button>
+    </div>
+  </header>
+
+  <main class="conteudo">
+    <h1>Painel do administrador</h1>
+    <div id="aviso" style="display:none"></div>
+
+    <section class="kpis">
+      <div class="kpi"><span>Usuários</span><strong id="kpi-usuarios">0</strong></div>
+      <div class="kpi"><span>Produtos</span><strong id="kpi-produtos">0</strong></div>
+      <div class="kpi"><span>Pedidos</span><strong id="kpi-pedidos">0</strong></div>
+      <div class="kpi"><span>Pedidos pendentes</span><strong id="kpi-pendentes">0</strong></div>
+      <div class="kpi"><span>Sem estoque</span><strong id="kpi-sem-estoque">0</strong></div>
+      <div class="kpi"><span>Faturamento</span><strong id="kpi-faturamento">R$ 0,00</strong></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Cadastrar produto</h2>
+      <form id="form-produto">
+        <div class="form-grid">
+          <div class="campo"><label for="p-nome">Nome</label><input type="text" id="p-nome" required></div>
+          <div class="campo"><label for="p-categoria">Categoria</label><input type="text" id="p-categoria" placeholder="Premium"></div>
+          <div class="campo"><label for="p-preco">Preço (R$)</label><input type="number" id="p-preco" step="0.01" min="0.01" required></div>
+          <div class="campo"><label for="p-estoque">Estoque</label><input type="number" id="p-estoque" min="0" step="1" required></div>
+          <div class="campo"><label for="p-descricao">Descrição</label><input type="text" id="p-descricao"></div>
+          <div class="campo"><label for="p-imagem">Imagem do produto</label><input type="file" id="p-imagem" accept="image/*"></div>
+        </div>
+        <button type="submit" class="btn">SALVAR PRODUTO</button>
+      </form>
+    </section>
+
+    <section class="bloco">
+      <h2>Produtos</h2>
+      <table>
+        <thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tabela-produtos"></tbody>
+      </table>
+    </section>
+
+    <section class="bloco">
+      <h2>Pedidos</h2>
+      <table>
+        <thead><tr><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Total</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tabela-pedidos"></tbody>
+      </table>
+    </section>
+
+    <section class="bloco">
+      <h2>Usuários</h2>
+      <table>
+        <thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Situação</th><th>Ações</th></tr></thead>
+        <tbody id="tabela-usuarios"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/api-local.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
