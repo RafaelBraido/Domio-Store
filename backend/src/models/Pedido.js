@@ -16,6 +16,7 @@ const pedidoSchema = new mongoose.Schema(
     usuario: { type: mongoose.Schema.Types.ObjectId, ref: "Usuario", required: true, index: true },
     itens: { type: [itemPedidoSchema], required: true },
     valorTotal: { type: Number, required: true, min: 0 },
+    cidade: { type: String, default: "" },
     status: {
       type: String,
       enum: ["PENDENTE", "PAGO", "CANCELADO", "FINALIZADO"],
