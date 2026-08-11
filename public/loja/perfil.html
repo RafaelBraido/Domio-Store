@@ -1,79 +1,51 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minha conta - Domínio Store</title>
-    <meta name="description" content="Atualize seus dados pessoais, sua foto de perfil e sua senha na Domínio Store.">
-    <link rel="stylesheet" href="estilo-visual/vitrine.css">
-    <link rel="stylesheet" href="estilo-visual/painel.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha conta - Domínio Store</title>
+  <meta name="description" content="Atualize seus dados, sua foto de perfil e sua senha na Domínio Store.">
+  <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-    <header class="topo">
-        <a class="marca" href="index.html">DOMÍNIO STORE</a>
-        <nav>
-            <a href="index.html">Vitrine</a>
-            <a href="dashboard.html" id="link-painel" style="display:none">Painel</a>
-        </nav>
-        <div class="topo-direita">
-            <button class="btn-ghost" id="btn-sair-perfil">Sair</button>
+  <header class="topo">
+    <a class="marca" href="index.html">DOMÍNIO STORE</a>
+    <nav>
+      <a href="index.html">Vitrine</a>
+      <a href="admin.html" id="link-admin" style="display:none">Painel</a>
+    </nav>
+    <div class="topo-direita">
+      <button class="btn btn-claro" id="btn-sair">Sair</button>
+    </div>
+  </header>
+
+  <main class="conteudo">
+    <h1>Minha conta</h1>
+    <div id="aviso" style="display:none"></div>
+
+    <section class="bloco">
+      <form id="form-perfil">
+        <div class="campo">
+          <img class="foto-perfil" id="previa-foto" alt="Foto de perfil">
+          <label for="foto">Foto de perfil</label>
+          <input type="file" id="foto" accept="image/*">
         </div>
-    </header>
+        <div class="form-grid">
+          <div class="campo"><label for="nome">Nome</label><input type="text" id="nome" required></div>
+          <div class="campo"><label for="sobrenome">Sobrenome</label><input type="text" id="sobrenome"></div>
+          <div class="campo"><label for="email">E-mail</label><input type="email" id="email" required></div>
+          <div class="campo"><label for="telefone">Telefone</label><input type="text" id="telefone"></div>
+          <div class="campo"><label for="endereco">Endereço</label><input type="text" id="endereco"></div>
+          <div class="campo"><label for="senha">Nova senha (opcional)</label><input type="password" id="senha" minlength="6"></div>
+        </div>
+        <button type="submit" class="btn">SALVAR ALTERAÇÕES</button>
+      </form>
+    </section>
+  </main>
 
-    <main class="painel-conteudo">
-        <h1 class="painel-titulo">Minha conta</h1>
-        <p class="painel-subtitulo" id="perfil-resumo"></p>
-
-        <section class="bloco">
-            <h2>Dados pessoais</h2>
-            <form id="form-perfil">
-                <div class="perfil-foto-area">
-                    <img id="perfil-foto-previa" alt="Foto de perfil" src="">
-                    <div class="campo">
-                        <label for="perfil-foto">Foto de perfil</label>
-                        <input type="file" id="perfil-foto" accept="image/*">
-                    </div>
-                </div>
-
-                <div class="form-grid">
-                    <div class="campo">
-                        <label for="perfil-nome">Nome</label>
-                        <input type="text" id="perfil-nome" required>
-                    </div>
-                    <div class="campo">
-                        <label for="perfil-sobrenome">Sobrenome</label>
-                        <input type="text" id="perfil-sobrenome">
-                    </div>
-                    <div class="campo">
-                        <label for="perfil-email">E-mail</label>
-                        <input type="email" id="perfil-email" disabled>
-                    </div>
-                    <div class="campo">
-                        <label for="perfil-nascimento">Data de nascimento</label>
-                        <input type="text" id="perfil-nascimento" placeholder="DD/MM/AAAA">
-                    </div>
-                    <div class="campo">
-                        <label for="perfil-telefone">Telefone</label>
-                        <input type="text" id="perfil-telefone" placeholder="(00) 00000-0000">
-                    </div>
-                    <div class="campo">
-                        <label for="perfil-senha">Nova senha (opcional)</label>
-                        <input type="password" id="perfil-senha" placeholder="mínimo 6 caracteres">
-                    </div>
-                    <div class="campo largo">
-                        <label for="perfil-endereco">Endereço de entrega</label>
-                        <textarea id="perfil-endereco" placeholder="Rua, número, bairro, cidade"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit">SALVAR ALTERAÇÕES</button>
-                <div id="perfil-aviso" style="display:none"></div>
-            </form>
-        </section>
-    </main>
-
-    <script src="scripts-js/config.js"></script>
-    <script src="scripts-js/api-local.js"></script>
-    <script src="scripts-js/perfil.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api-local.js"></script>
+  <script src="js/services.js"></script>
+  <script src="js/perfil.js"></script>
 </body>
 </html>
