@@ -76,8 +76,10 @@ async function carregarProdutos() {
 
 async function carregarPedidos() {
   const pedidos = await ServicoPedidos.listar();
+  todosPedidos = pedidos;
   const corpo = document.getElementById("tabela-pedidos");
-  corpo.innerHTML = pedidos.map(function (p) {
+  const emAndamento = pedidos.filter(function (p) { return p.status === "PENDENTE" || p.status === "PAGO"; });
+  corpo.innerHTML = emAndamento.map(function (p) {
     const itens = p.itens.map(function (i) { return i.quantidade + "x " + i.nome; }).join(", ");
     const finalizado = ["CANCELADO", "FINALIZADO"].includes(p.status);
     const opcoes = ["PENDENTE", "PAGO", "CANCELADO", "FINALIZADO"].map(function (s) {
@@ -90,6 +92,9 @@ async function carregarPedidos() {
       '<td>' + (finalizado ? "—" : '<button class="btn" data-aplicar="' + p._id + '">Aplicar</button>') + "</td></tr>"
     );
   }).join("");
+  if (emAndamento.length === 0) {
+    corpo.innerHTML = '<tr><td colspan="6">Nenhum pedido em andamento.</td></tr>';
+  }
 
   corpo.querySelectorAll("[data-aplicar]").forEach(function (b) {
     b.addEventListener("click", function () {
@@ -98,6 +103,28 @@ async function carregarPedidos() {
       acao(function () { return ServicoPedidos.alterarStatus(id, status); });
     });
   });
+
+  desenharHistorico();
+}
+
+// Histórico: todos os pedidos da loja, com filtro por status.
+function desenharHistorico() {
+  const corpo = document.getElementById("tabela-historico");
+  if (!corpo) return;
+  const filtro = document.getElementById("filtro-historico").value;
+  const lista = todosPedidos.filter(function (p) { return filtro === "TODOS" || p.status === filtro; });
+  document.getElementById("contador-historico").textContent = lista.length + " pedido(s)";
+  corpo.innerHTML = lista.length === 0
+    ? '<tr><td colspan="6">Nenhum pedido encontrado.</td></tr>'
+    : lista.map(function (p) {
+        const itens = p.itens.map(function (i) { return i.quantidade + "x " + i.nome; }).join(", ");
+        const data = new Date(p.criadoEm).toLocaleString("pt-BR");
+        return (
+          "<tr><td>" + data + "</td><td>" + p.nomeUsuario + "</td><td>" + itens + "</td>" +
+          "<td>" + (p.cidade || "—") + "</td><td>" + formatarPreco(p.valorTotal) + "</td>" +
+          "<td>" + p.status + "</td></tr>"
+        );
+      }).join("");
 }
 
 async function carregarUsuarios() {
