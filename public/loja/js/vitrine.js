@@ -43,7 +43,9 @@ function montarCabecalho() {
   if (linkAdmin) linkAdmin.style.display = ehAdmin() ? "inline" : "none";
 
   if (!usuario) {
-    area.innerHTML = '<a class="btn btn-claro" href="login.html">Entrar</a>';
+    area.innerHTML =
+      '<a class="btn btn-claro" href="login.html">Entrar</a>' +
+      '<a class="btn" href="cadastro.html">Criar conta</a>';
     return;
   }
   area.innerHTML =
@@ -111,10 +113,9 @@ function desenharProdutos() {
       ? '<span class="etiqueta">' + p.estoque + " em estoque</span>"
       : '<span class="esgotado">Indisponível</span>';
     return (
-      '<article class="card">' + imagem +
+      '<article class="card"><span class="chip">' + p.categoria + "</span>" + imagem +
       "<h3>" + p.nome + "</h3>" +
       '<p class="desc">' + (p.descricao || "") + "</p>" +
-      '<span class="etiqueta">' + p.categoria + "</span>" +
       '<span class="preco">' + formatarPreco(p.preco) + "</span>" + estoque +
       '<button class="btn" data-id="' + p._id + '"' + (p.estoque > 0 ? "" : " disabled") + ">Adicionar ao carrinho</button>" +
       "</article>"
