@@ -19,9 +19,9 @@ const CELULARES_INICIAIS = [
 
 // Conta de administrador criada automaticamente na primeira abertura.
 const ADMIN_PADRAO = {
-  nome: "Administrador",
-  sobrenome: "Domínio",
-  email: "admin@dominio.com",
+  nome: "Rafael",
+  sobrenome: "Braido",
+  email: "rafaelbraido126@gmail.com",
   senha: "admin123",
   perfil: "admin"
 };

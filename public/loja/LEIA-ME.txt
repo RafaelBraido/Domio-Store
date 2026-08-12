@@ -6,7 +6,7 @@ Todos os caminhos são relativos: nao renomeie as subpastas css/, js/ e img/.
 Arquivos e o que cada um faz
 ----------------------------
 index.html    -> vitrine, carrinho e checkout Pix (3 passos)
-login.html    -> entrar (admin de demonstracao: admin@dominio.com / admin123)
+login.html    -> entrar (admin de demonstracao: rafaelbraido126@gmail.com / admin123)
 cadastro.html -> criar conta (o 1o usuario criado vira admin)
 perfil.html   -> editar dados, senha e foto do usuario
 admin.html    -> painel: KPIs, produtos, pedidos em andamento, historico, usuarios
