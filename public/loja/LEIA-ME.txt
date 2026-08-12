@@ -1,0 +1,38 @@
+DOMÍNIO STORE — front-end (pasta "loja")
+========================================
+Copie ESTA pasta inteira para o seu projeto e abra "index.html".
+Todos os caminhos são relativos: nao renomeie as subpastas css/, js/ e img/.
+
+Arquivos e o que cada um faz
+----------------------------
+index.html    -> vitrine, carrinho e checkout Pix (3 passos)
+login.html    -> entrar (admin de demonstracao: admin@dominio.com / admin123)
+cadastro.html -> criar conta (o 1o usuario criado vira admin)
+perfil.html   -> editar dados, senha e foto do usuario
+admin.html    -> painel: KPIs, produtos, pedidos em andamento, historico, usuarios
+
+css/estilo.css   -> UNICA folha de estilo do site
+js/config.js     -> configuracoes (API_URL, USAR_API_LOCAL, WhatsApp, chave Pix)
+js/api-local.js  -> banco de dados no navegador (modo demonstracao)
+js/services.js   -> chamadas da API (ServicoAuth, ServicoProdutos, ServicoPedidos...)
+js/vitrine.js    -> logica da vitrine, carrinho, checkout e "meus pedidos"
+js/auth.js       -> login e cadastro
+js/perfil.js     -> minha conta
+js/admin.js      -> painel do administrador
+img/pix.jpg      -> QR Code Pix mostrado no passo 2 do checkout
+
+Usar com o back-end Node/Express
+--------------------------------
+Em js/config.js troque:
+  const USAR_API_LOCAL = false;
+  const API_URL = "http://localhost:3000/api";
+Depois, na pasta backend: npm install && npm run dev (PORT=3000 no .env).
+
+Fluxo de compra
+---------------
+1) Adicionar ao carrinho (nunca acima do estoque)
+2) FINALIZAR COMPRA -> escolher a CIDADE
+3) FALAR COM O VENDEDOR NO WHATSAPP (+55 42 98422-4752) para negociar
+4) IR PARA O PAGAMENTO -> escanear o QR Code Pix
+5) JA FIZ O PAGAMENTO -> pedido criado como PENDENTE e estoque reservado
+6) O admin confirma no painel: PENDENTE -> PAGO -> FINALIZADO
