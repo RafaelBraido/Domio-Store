@@ -13,6 +13,10 @@ document.getElementById("nome-admin").textContent = (obterUsuario() || {}).nome 
 document.getElementById("btn-sair").addEventListener("click", sair);
 
 let imagemProduto = "";
+let todosPedidos = [];
+
+const filtroHistorico = document.getElementById("filtro-historico");
+if (filtroHistorico) filtroHistorico.addEventListener("change", desenharHistorico);
 
 document.getElementById("p-imagem").addEventListener("change", function (evento) {
   const arquivo = evento.target.files[0];
