@@ -1,14 +1,10 @@
 /* ============================================================
    CONFIGURAÇÃO GERAL DA LOJA
    ------------------------------------------------------------
-   USAR_API_LOCAL = true  -> a loja funciona sozinha no navegador
-                             (dados salvos no localStorage).
-   USAR_API_LOCAL = false -> a loja conversa com o back-end
-                             Node/Express rodando em API_URL.
+   O sistema é 100% HTML + CSS + JavaScript.
+   Não existe servidor: os dados ficam salvos no localStorage
+   do navegador (arquivo js/api-local.js).
    ============================================================ */
-
-const API_URL = "http://localhost:3000/api"; // back-end local (PORT=3000)
-const USAR_API_LOCAL = true;
 
 // Dados do vendedor usados no checkout
 const WHATSAPP_VENDEDOR = "5542984224752";
@@ -60,35 +56,8 @@ function mostrarAviso(elemento, mensagem, tipo) {
   elemento.style.display = mensagem ? "block" : "none";
 }
 
-/* ---------------- Requisição HTTP ----------------
-   Uma única função para falar com a API (real ou local). */
+/* ---------------- Ponto único de acesso aos dados ----------------
+   Todas as telas chamam requisitar(); ela repassa para a "API local". */
 async function requisitar(caminho, opcoes) {
-  const config = opcoes || {};
-
-  if (USAR_API_LOCAL) {
-    return apiLocal(caminho, config);
-  }
-
-  const headers = Object.assign({ "Content-Type": "application/json" }, config.headers || {});
-  const token = obterToken();
-  if (token) headers.Authorization = "Bearer " + token;
-
-  const resposta = await fetch(API_URL + caminho, {
-    method: config.method || "GET",
-    headers: headers,
-    body: config.corpo ? JSON.stringify(config.corpo) : undefined
-  });
-
-  const texto = await resposta.text();
-  let dados = null;
-  try {
-    dados = texto ? JSON.parse(texto) : null;
-  } catch (erro) {
-    dados = { mensagem: texto };
-  }
-
-  if (!resposta.ok) {
-    throw new Error((dados && dados.mensagem) || "Erro na requisição (" + resposta.status + ")");
-  }
-  return dados;
+  return apiLocal(caminho, opcoes || {});
 }

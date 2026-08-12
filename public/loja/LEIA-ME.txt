@@ -6,7 +6,7 @@ Todos os caminhos são relativos: nao renomeie as subpastas css/, js/ e img/.
 Arquivos e o que cada um faz
 ----------------------------
 index.html    -> vitrine, carrinho e checkout Pix (3 passos)
-login.html    -> entrar (admin de demonstracao: admin@dominio.com / admin123)
+login.html    -> entrar (admin de demonstracao: rafaelbraido126@gmail.com / admin123)
 cadastro.html -> criar conta (o 1o usuario criado vira admin)
 perfil.html   -> editar dados, senha e foto do usuario
 admin.html    -> painel: KPIs, produtos, pedidos em andamento, historico, usuarios
@@ -21,18 +21,18 @@ js/perfil.js     -> minha conta
 js/admin.js      -> painel do administrador
 img/pix.jpg      -> QR Code Pix mostrado no passo 2 do checkout
 
-Usar com o back-end Node/Express
---------------------------------
-Em js/config.js troque:
-  const USAR_API_LOCAL = false;
-  const API_URL = "http://localhost:3000/api";
-Depois, na pasta backend: npm install && npm run dev (PORT=3000 no .env).
+Sistema 100% estatico
+---------------------
+Nao existe back-end: os dados (usuarios, produtos e pedidos) ficam
+salvos no localStorage do navegador, pelo arquivo js/api-local.js.
+Basta abrir index.html no navegador.
 
 Fluxo de compra
 ---------------
 1) Adicionar ao carrinho (nunca acima do estoque)
 2) FINALIZAR COMPRA -> escolher a CIDADE
-3) FALAR COM O VENDEDOR NO WHATSAPP (+55 42 98422-4752) para negociar
+3) FALAR COM O VENDEDOR NO WHATSAPP (+55 42 98422-4752) para NEGOCIAR
+   (so depois de negociar o botao de pagamento libera)
 4) IR PARA O PAGAMENTO -> escanear o QR Code Pix
 5) JA FIZ O PAGAMENTO -> pedido criado como PENDENTE e estoque reservado
 6) O admin confirma no painel: PENDENTE -> PAGO -> FINALIZADO

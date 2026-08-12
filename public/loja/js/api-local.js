@@ -19,9 +19,9 @@ const CELULARES_INICIAIS = [
 
 // Conta de administrador criada automaticamente na primeira abertura.
 const ADMIN_PADRAO = {
-  nome: "Administrador",
-  sobrenome: "Domínio",
-  email: "admin@dominio.com",
+  nome: "Rafael",
+  sobrenome: "Braido",
+  email: "rafaelbraido126@gmail.com",
   senha: "admin123",
   perfil: "admin"
 };
@@ -77,6 +77,31 @@ function lerBanco() {
     };
     gravarBanco(banco);
   }
+
+  // Garante que a conta de administrador exista (e esteja como admin).
+  const admin = banco.usuarios.find(function (u) { return u.email === ADMIN_PADRAO.email; });
+  if (!admin) {
+    banco.usuarios.push({
+      _id: novoId(),
+      nome: ADMIN_PADRAO.nome,
+      sobrenome: ADMIN_PADRAO.sobrenome,
+      email: ADMIN_PADRAO.email,
+      senha: ADMIN_PADRAO.senha,
+      perfil: "admin",
+      ativo: true,
+      telefone: "",
+      endereco: "",
+      dataNascimento: "",
+      foto: "",
+      criadoEm: new Date().toISOString()
+    });
+    gravarBanco(banco);
+  } else if (admin.perfil !== "admin" || !admin.ativo) {
+    admin.perfil = "admin";
+    admin.ativo = true;
+    gravarBanco(banco);
+  }
+
   return banco;
 }
 
