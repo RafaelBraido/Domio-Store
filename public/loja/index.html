@@ -88,7 +88,11 @@
         <img class="qr" src="img/pix.jpg" alt="QR Code Pix da Domínio Store">
         <p>Nome: <strong id="nome-pix"></strong></p>
         <p style="word-break:break-all">Chave Pix: <strong id="chave-pix"></strong></p>
-        <button class="btn btn-bloco" id="btn-ja-paguei">JÁ FIZ O PAGAMENTO</button>
+        <div class="campo">
+          <label for="comprovante">Comprovante do pagamento (print ou PDF)</label>
+          <input type="file" id="comprovante" accept="image/*,application/pdf">
+        </div>
+        <button class="btn btn-bloco" id="btn-ja-paguei">ENVIAR COMPROVANTE E FINALIZAR</button>
       </section>
 
       <section class="passo" data-passo="3">

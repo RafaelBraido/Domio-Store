@@ -272,6 +272,7 @@ async function apiLocal(caminho, config) {
       const itens = Array.isArray(corpo.itens) ? corpo.itens : [];
       if (itens.length === 0) throw erroApi("Seu carrinho está vazio.");
       if (!corpo.cidade) throw erroApi("Selecione a cidade de entrega.");
+      if (!corpo.comprovante) throw erroApi("Envie o comprovante do pagamento Pix.");
 
       const itensFinais = [];
       let total = 0;
@@ -309,6 +310,7 @@ async function apiLocal(caminho, config) {
         valorTotal: Number(total.toFixed(2)),
         status: "PENDENTE",
         cidade: corpo.cidade,
+        comprovante: corpo.comprovante,
         criadoEm: new Date().toISOString()
       };
       banco.pedidos.push(pedido);
@@ -330,7 +332,7 @@ async function apiLocal(caminho, config) {
 
     if (partes[2] === "status" && metodo === "PATCH") {
       if (usuario.perfil !== "admin") throw erroApi("Apenas administradores alteram o status.", 403);
-      const permitidos = ["PENDENTE", "PAGO", "CANCELADO", "FINALIZADO"];
+      const permitidos = ["PENDENTE", "PAGO", "ENVIADO", "CANCELADO", "FINALIZADO"];
       if (!permitidos.includes(corpo.status)) throw erroApi("Status inválido.");
       if (["CANCELADO", "FINALIZADO"].includes(pedido.status)) {
         throw erroApi("Pedido " + pedido.status + " não pode mudar de status.", 409);
