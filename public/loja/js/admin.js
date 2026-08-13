@@ -12,19 +12,10 @@ if (!ehAdmin()) {
 document.getElementById("nome-admin").textContent = (obterUsuario() || {}).nome || "";
 document.getElementById("btn-sair").addEventListener("click", sair);
 
-let imagemProduto = "";
 let todosPedidos = [];
 
 const filtroHistorico = document.getElementById("filtro-historico");
 if (filtroHistorico) filtroHistorico.addEventListener("change", desenharHistorico);
-
-document.getElementById("p-imagem").addEventListener("change", function (evento) {
-  const arquivo = evento.target.files[0];
-  if (!arquivo) return;
-  const leitor = new FileReader();
-  leitor.onload = function () { imagemProduto = leitor.result; };
-  leitor.readAsDataURL(arquivo);
-});
 
 async function carregarIndicadores() {
   const dados = await ServicoEstatisticas.obter();
@@ -34,48 +25,6 @@ async function carregarIndicadores() {
   document.getElementById("kpi-pendentes").textContent = dados.pedidosPendentes;
   document.getElementById("kpi-sem-estoque").textContent = dados.semEstoque;
   document.getElementById("kpi-faturamento").textContent = formatarPreco(dados.faturamento);
-}
-
-async function carregarProdutos() {
-  const produtos = await ServicoProdutos.listar();
-  const corpo = document.getElementById("tabela-produtos");
-  corpo.innerHTML = produtos.map(function (p) {
-    return (
-      "<tr><td>" + p.nome + "</td>" +
-      '<td><input type="number" step="0.01" min="0.01" value="' + p.preco + '" data-preco="' + p._id + '" style="width:110px"></td>' +
-      '<td><input type="number" step="1" min="0" value="' + p.estoque + '" data-estoque="' + p._id + '" style="width:80px"></td>' +
-      "<td>" + p.status + "</td>" +
-      '<td><button class="btn" data-salvar="' + p._id + '">Salvar</button> ' +
-      '<button class="btn btn-claro" data-status="' + p._id + '">' + (p.status === "ativo" ? "Desativar" : "Ativar") + "</button> " +
-      '<button class="btn btn-perigo" data-excluir="' + p._id + '">Excluir</button></td></tr>'
-    );
-  }).join("");
-
-  corpo.querySelectorAll("[data-salvar]").forEach(function (b) {
-    b.addEventListener("click", function () {
-      const id = b.getAttribute("data-salvar");
-      acao(function () {
-        return ServicoProdutos.atualizar(id, {
-          preco: Number(corpo.querySelector('[data-preco="' + id + '"]').value),
-          estoque: Number(corpo.querySelector('[data-estoque="' + id + '"]').value)
-        });
-      });
-    });
-  });
-  corpo.querySelectorAll("[data-status]").forEach(function (b) {
-    b.addEventListener("click", function () {
-      const id = b.getAttribute("data-status");
-      const produto = produtos.find(function (p) { return p._id === id; });
-      acao(function () {
-        return ServicoProdutos.atualizar(id, { status: produto.status === "ativo" ? "inativo" : "ativo" });
-      });
-    });
-  });
-  corpo.querySelectorAll("[data-excluir]").forEach(function (b) {
-    b.addEventListener("click", function () {
-      acao(function () { return ServicoProdutos.excluir(b.getAttribute("data-excluir")); });
-    });
-  });
 }
 
 async function carregarPedidos() {
@@ -160,22 +109,6 @@ async function carregarUsuarios() {
   });
 }
 
-document.getElementById("form-produto").addEventListener("submit", function (evento) {
-  evento.preventDefault();
-  acao(async function () {
-    await ServicoProdutos.criar({
-      nome: document.getElementById("p-nome").value.trim(),
-      categoria: document.getElementById("p-categoria").value.trim() || "Geral",
-      preco: Number(document.getElementById("p-preco").value),
-      estoque: Number(document.getElementById("p-estoque").value),
-      descricao: document.getElementById("p-descricao").value.trim(),
-      imagem: imagemProduto
-    });
-    document.getElementById("form-produto").reset();
-    imagemProduto = "";
-  }, "Produto salvo com sucesso.");
-});
-
 // Executa uma ação e recarrega todas as listas.
 async function acao(funcao, mensagemOk) {
   try {
@@ -190,7 +123,6 @@ async function acao(funcao, mensagemOk) {
 async function carregarTudo() {
   try {
     await carregarIndicadores();
-    await carregarProdutos();
     await carregarPedidos();
     await carregarUsuarios();
   } catch (erro) {

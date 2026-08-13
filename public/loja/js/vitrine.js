@@ -40,7 +40,9 @@ function montarCabecalho() {
   const usuario = obterUsuario();
   const linkAdmin = document.getElementById("link-admin");
 
+  const linkEstoque = document.getElementById("link-estoque");
   if (linkAdmin) linkAdmin.style.display = ehAdmin() ? "inline" : "none";
+  if (linkEstoque) linkEstoque.style.display = ehAdmin() ? "inline" : "none";
 
   if (!usuario) {
     area.innerHTML =
