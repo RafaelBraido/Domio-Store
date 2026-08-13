@@ -13,6 +13,7 @@
     <nav>
       <a href="index.html">Vitrine</a>
       <a href="admin.html">Painel</a>
+      <a href="estoque.html">Estoque</a>
       <a href="perfil.html">Minha conta</a>
     </nav>
     <div class="topo-direita">
@@ -35,26 +36,9 @@
     </section>
 
     <section class="bloco">
-      <h2>Cadastrar produto</h2>
-      <form id="form-produto">
-        <div class="form-grid">
-          <div class="campo"><label for="p-nome">Nome</label><input type="text" id="p-nome" required></div>
-          <div class="campo"><label for="p-categoria">Categoria</label><input type="text" id="p-categoria" placeholder="Premium"></div>
-          <div class="campo"><label for="p-preco">Preço (R$)</label><input type="number" id="p-preco" step="0.01" min="0.01" required></div>
-          <div class="campo"><label for="p-estoque">Estoque</label><input type="number" id="p-estoque" min="0" step="1" required></div>
-          <div class="campo"><label for="p-descricao">Descrição</label><input type="text" id="p-descricao"></div>
-          <div class="campo"><label for="p-imagem">Imagem do produto</label><input type="file" id="p-imagem" accept="image/*"></div>
-        </div>
-        <button type="submit" class="btn">SALVAR PRODUTO</button>
-      </form>
-    </section>
-
-    <section class="bloco">
-      <h2>Produtos</h2>
-      <table>
-        <thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Status</th><th>Ações</th></tr></thead>
-        <tbody id="tabela-produtos"></tbody>
-      </table>
+      <h2>Estoque</h2>
+      <p class="etiqueta">O cadastro de celulares, preços, estoque e imagens fica em uma página separada.</p>
+      <a class="btn" href="estoque.html">ABRIR PÁGINA DE ESTOQUE</a>
     </section>
 
     <section class="bloco">
