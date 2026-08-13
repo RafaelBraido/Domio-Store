@@ -36,3 +36,9 @@ Fluxo de compra
 4) IR PARA O PAGAMENTO -> escanear o QR Code Pix
 5) JA FIZ O PAGAMENTO -> pedido criado como PENDENTE e estoque reservado
 6) O admin confirma no painel: PENDENTE -> PAGO -> FINALIZADO
+
+
+estoque.html + js/estoque.js -> pagina exclusiva do admin: cadastrar celulares,
+alterar preco, estoque, imagem (upload) e ativar/desativar/excluir.
+admin.html cuida apenas de indicadores, pedidos (status), historico e usuarios.
+O sistema e 100% front-end: HTML + CSS + JavaScript, dados no localStorage.
