@@ -31,22 +31,25 @@ async function carregarPedidos() {
   const pedidos = await ServicoPedidos.listar();
   todosPedidos = pedidos;
   const corpo = document.getElementById("tabela-pedidos");
-  const emAndamento = pedidos.filter(function (p) { return p.status === "PENDENTE" || p.status === "PAGO"; });
+  const emAndamento = pedidos.filter(function (p) { return ["PENDENTE", "PAGO", "ENVIADO"].includes(p.status); });
   corpo.innerHTML = emAndamento.map(function (p) {
     const itens = p.itens.map(function (i) { return i.quantidade + "x " + i.nome; }).join(", ");
     const finalizado = ["CANCELADO", "FINALIZADO"].includes(p.status);
-    const opcoes = ["PENDENTE", "PAGO", "CANCELADO", "FINALIZADO"].map(function (s) {
+    const comprovante = p.comprovante
+      ? '<a class="btn btn-claro" href="' + p.comprovante + '" target="_blank" rel="noopener">Comprovante</a>'
+      : "—";
+    const opcoes = ["PENDENTE", "PAGO", "ENVIADO", "CANCELADO", "FINALIZADO"].map(function (s) {
       return '<option value="' + s + '"' + (s === p.status ? " selected" : "") + ">" + s + "</option>";
     }).join("");
     return (
       "<tr><td>" + p.nomeUsuario + "</td><td>" + itens + "</td><td>" + (p.cidade || "—") + "</td>" +
-      "<td>" + formatarPreco(p.valorTotal) + "</td>" +
+      "<td>" + formatarPreco(p.valorTotal) + "</td><td>" + comprovante + "</td>" +
       '<td><select data-status-pedido="' + p._id + '"' + (finalizado ? " disabled" : "") + ">" + opcoes + "</select></td>" +
       '<td>' + (finalizado ? "—" : '<button class="btn" data-aplicar="' + p._id + '">Aplicar</button>') + "</td></tr>"
     );
   }).join("");
   if (emAndamento.length === 0) {
-    corpo.innerHTML = '<tr><td colspan="6">Nenhum pedido em andamento.</td></tr>';
+    corpo.innerHTML = '<tr><td colspan="7">Nenhum pedido em andamento.</td></tr>';
   }
 
   corpo.querySelectorAll("[data-aplicar]").forEach(function (b) {
@@ -113,7 +116,9 @@ async function carregarUsuarios() {
 async function acao(funcao, mensagemOk) {
   try {
     await funcao();
-    await carregarTudo();
+    await exigirAdmin().then(function (liberado) {
+  if (liberado) carregarTudo();
+});
     mostrarAviso(aviso, mensagemOk || "Alteração salva.", "ok");
   } catch (erro) {
     mostrarAviso(aviso, erro.message, "erro");
@@ -130,4 +135,6 @@ async function carregarTudo() {
   }
 }
 
-carregarTudo();
+exigirAdmin().then(function (liberado) {
+  if (liberado) carregarTudo();
+});

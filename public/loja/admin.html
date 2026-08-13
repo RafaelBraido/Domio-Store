@@ -43,9 +43,9 @@
 
     <section class="bloco">
       <h2>Pedidos em andamento</h2>
-      <p class="etiqueta">Pedidos PENDENTE e PAGO. Confirme o Pix mudando o status para PAGO e depois FINALIZADO.</p>
+      <p class="etiqueta">Pedidos PENDENTE e PAGO. Confirme o Pix (PAGO), marque como ENVIADO e depois FINALIZADO.</p>
       <table>
-        <thead><tr><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Total</th><th>Status</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Total</th><th>Comprovante</th><th>Status</th><th>Ações</th></tr></thead>
         <tbody id="tabela-pedidos"></tbody>
       </table>
     </section>
@@ -58,6 +58,7 @@
           <option value="TODOS">Todos os status</option>
           <option value="PENDENTE">PENDENTE</option>
           <option value="PAGO">PAGO</option>
+          <option value="ENVIADO">ENVIADO</option>
           <option value="FINALIZADO">FINALIZADO</option>
           <option value="CANCELADO">CANCELADO</option>
         </select>

@@ -61,3 +61,26 @@ function mostrarAviso(elemento, mensagem, tipo) {
 async function requisitar(caminho, opcoes) {
   return apiLocal(caminho, opcoes || {});
 }
+
+/* ---------------- Proteção das páginas do administrador ----------------
+   Além do perfil salvo na sessão, confirmamos o perfil real no banco.
+   Quem não for admin é enviado para o login. */
+async function exigirAdmin() {
+  if (!obterUsuario()) {
+    window.location.href = "login.html";
+    return false;
+  }
+  try {
+    const resposta = await requisitar("/auth/perfil");
+    if (!resposta.usuario || resposta.usuario.perfil !== "admin" || !resposta.usuario.ativo) {
+      alert("Acesso restrito ao administrador.");
+      window.location.href = "index.html";
+      return false;
+    }
+    localStorage.setItem(CHAVE_USUARIO, JSON.stringify(resposta.usuario));
+    return true;
+  } catch (erro) {
+    sair();
+    return false;
+  }
+}

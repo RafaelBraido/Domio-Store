@@ -257,14 +257,28 @@ function falarComVendedor() {
   validarPasso1();
 }
 
+// Converte o arquivo escolhido em texto Base64 para guardar no navegador.
+function lerArquivo(arquivo) {
+  return new Promise(function (resolver, rejeitar) {
+    const leitor = new FileReader();
+    leitor.onload = function () { resolver(leitor.result); };
+    leitor.onerror = function () { rejeitar(new Error("Não foi possível ler o comprovante.")); };
+    leitor.readAsDataURL(arquivo);
+  });
+}
+
 async function confirmarPagamento() {
   const aviso = document.getElementById("aviso-checkout");
   const botao = document.getElementById("btn-ja-paguei");
   botao.disabled = true;
   mostrarAviso(aviso, "Registrando seu pedido...", "info");
   try {
+    const arquivo = document.getElementById("comprovante").files[0];
+    if (!arquivo) throw new Error("Anexe o comprovante do Pix para finalizar.");
+    const comprovante = await lerArquivo(arquivo);
     const itens = carrinho.map(function (i) { return { celular: i.celular, quantidade: i.quantidade }; });
-    await ServicoPedidos.criar(itens, document.getElementById("cidade").value);
+    await ServicoPedidos.criar(itens, document.getElementById("cidade").value, comprovante);
+    document.getElementById("comprovante").value = "";
     carrinho = [];
     gravarCarrinho();
     desenharCarrinho();
