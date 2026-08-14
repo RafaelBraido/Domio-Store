@@ -12,7 +12,7 @@
     <a class="marca" href="index.html">DOMÍNIO STORE</a>
     <nav>
       <a href="index.html">Vitrine</a>
-      <a href="#meus-pedidos">Meus pedidos</a>
+      <a href="pedidos.html">Meus pedidos</a>
       <a href="admin.html" id="link-admin" style="display:none">Painel</a>
       <a href="estoque.html" id="link-estoque" style="display:none">Estoque</a>
     </nav>
@@ -40,11 +40,6 @@
     </div>
 
     <div class="grade" id="grade"></div>
-
-    <section id="meus-pedidos">
-      <h2>Meus pedidos</h2>
-      <div id="lista-pedidos"></div>
-    </section>
   </main>
 
   <aside class="carrinho" id="carrinho">
@@ -83,21 +78,60 @@
       </section>
 
       <section class="passo" data-passo="2">
-        <h3>2. Pagamento via Pix</h3>
-        <p>Escaneie o QR Code abaixo com o aplicativo do seu banco e informe o valor <strong id="valor-pix"></strong>.</p>
-        <img class="qr" src="img/pix.jpg" alt="QR Code Pix da Domínio Store">
-        <p>Nome: <strong id="nome-pix"></strong></p>
-        <p style="word-break:break-all">Chave Pix: <strong id="chave-pix"></strong></p>
-        <div class="campo">
-          <label for="comprovante">Comprovante do pagamento (print ou PDF)</label>
-          <input type="file" id="comprovante" accept="image/*,application/pdf">
+        <h3>2. Forma de pagamento</h3>
+        <p>Valor a pagar: <strong id="valor-pix"></strong></p>
+        <div class="formas">
+          <div class="forma ativa" data-forma="PIX">Pix (baixa automática)</div>
+          <div class="forma" data-forma="CREDITO">Cartão de crédito</div>
+          <div class="forma" data-forma="DEBITO">Cartão de débito</div>
         </div>
-        <button class="btn btn-bloco" id="btn-ja-paguei">ENVIAR COMPROVANTE E FINALIZAR</button>
+
+        <div id="area-pix">
+          <p>Escaneie o QR Code abaixo com o aplicativo do seu banco e pague exatamente o valor acima.</p>
+          <img class="qr" src="img/pix.jpg" alt="QR Code Pix da Domínio Store">
+          <p>Nome: <strong id="nome-pix"></strong></p>
+          <p style="word-break:break-all">Chave Pix: <strong id="chave-pix"></strong></p>
+          <div class="campo">
+            <label for="comprovante">Comprovante do pagamento (print ou PDF)</label>
+            <input type="file" id="comprovante" accept="image/*,application/pdf">
+          </div>
+        </div>
+
+        <div id="area-cartao" style="display:none">
+          <div class="campo">
+            <label for="cartao-numero">Número do cartão</label>
+            <input type="text" id="cartao-numero" inputmode="numeric" placeholder="0000 0000 0000 0000">
+          </div>
+          <div class="form-grid">
+            <div class="campo">
+              <label for="cartao-nome">Nome impresso</label>
+              <input type="text" id="cartao-nome">
+            </div>
+            <div class="campo">
+              <label for="cartao-validade">Validade (MM/AA)</label>
+              <input type="text" id="cartao-validade" placeholder="12/29">
+            </div>
+            <div class="campo">
+              <label for="cartao-cvv">CVV</label>
+              <input type="text" id="cartao-cvv" inputmode="numeric" placeholder="123">
+            </div>
+          </div>
+          <div class="campo" id="campo-parcelas">
+            <label for="parcelas">Parcelas</label>
+            <select id="parcelas"></select>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="valor-informado">Confirme o valor que você está pagando (R$)</label>
+          <input type="number" id="valor-informado" step="0.01">
+        </div>
+        <button class="btn btn-bloco" id="btn-ja-paguei">CONFIRMAR PAGAMENTO</button>
       </section>
 
       <section class="passo" data-passo="3">
         <h3>3. Pedido registrado!</h3>
-        <p>Seu pedido foi criado com status <strong>PENDENTE</strong> e o estoque já foi reservado. O vendedor confirma o pagamento e finaliza o pedido no painel.</p>
+        <p id="texto-final">Seu pedido foi criado e o estoque já foi reservado. Acompanhe tudo em <a href="pedidos.html">Meus pedidos</a>.</p>
         <button class="btn btn-bloco" id="btn-fim">FECHAR</button>
       </section>
     </div>
