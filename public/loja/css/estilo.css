@@ -186,3 +186,12 @@ th { color: var(--cinza); font-weight: 600; }
 .foto-perfil { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 1px solid var(--borda); background: var(--fundo); }
 
 .rodape { text-align: center; padding: 32px; color: var(--cinza); font-size: 13px; }
+/* ---------- Gráficos do painel ---------- */
+.graficos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.graficos h3 { font-size: 15px; margin-bottom: 8px; }
+.graficos canvas { width: 100%; max-width: 420px; }
+
+/* ---------- Formas de pagamento ---------- */
+.formas { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 12px 0; }
+.forma { border: 1px solid var(--borda); border-radius: 12px; padding: 12px; cursor: pointer; font-size: 14px; }
+.forma.ativa { border-color: var(--azul); background: #eaf1fd; }
