@@ -20,8 +20,8 @@ const ServicoProdutos = {
 
 const ServicoPedidos = {
   listar: function () { return requisitar("/pedidos"); },
-  criar: function (itens, cidade, comprovante) {
-    return requisitar("/pedidos", { method: "POST", corpo: { itens: itens, cidade: cidade, comprovante: comprovante } });
+  criar: function (dados) {
+    return requisitar("/pedidos", { method: "POST", corpo: dados });
   },
   alterarStatus: function (id, status) { return requisitar("/pedidos/" + id + "/status", { method: "PATCH", corpo: { status: status } }); },
   cancelar: function (id) { return requisitar("/pedidos/" + id + "/cancelar", { method: "POST" }); }
