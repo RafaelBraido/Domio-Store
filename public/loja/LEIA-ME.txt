@@ -42,3 +42,10 @@ estoque.html + js/estoque.js -> pagina exclusiva do admin: cadastrar celulares,
 alterar preco, estoque, imagem (upload) e ativar/desativar/excluir.
 admin.html cuida apenas de indicadores, pedidos (status), historico e usuarios.
 O sistema e 100% front-end: HTML + CSS + JavaScript, dados no localStorage.
+
+ATUALIZACAO
+- Projeto 100% front-end: apenas HTML, CSS e JavaScript dentro de public/loja.
+- Checkout: cidade -> negociar no WhatsApp -> QR Code Pix -> ANEXAR COMPROVANTE -> pedido criado.
+- Admin ve o comprovante na tabela de pedidos e muda o status:
+  PENDENTE -> PAGO -> ENVIADO -> FINALIZADO (ou CANCELADO, que devolve o estoque).
+- admin.html e estoque.html chamam exigirAdmin() (js/config.js): quem nao for admin e redirecionado.
