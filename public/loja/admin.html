@@ -36,6 +36,21 @@
     </section>
 
     <section class="bloco">
+      <h2>Gráficos</h2>
+      <p class="etiqueta">Usuários cadastrados e compras realizadas nos últimos 6 meses.</p>
+      <div class="graficos">
+        <div>
+          <h3>Usuários</h3>
+          <canvas id="grafico-usuarios" width="420" height="200"></canvas>
+        </div>
+        <div>
+          <h3>Compras</h3>
+          <canvas id="grafico-pedidos" width="420" height="200"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="bloco">
       <h2>Estoque</h2>
       <p class="etiqueta">O cadastro de celulares, preços, estoque e imagens fica em uma página separada.</p>
       <a class="btn" href="estoque.html">ABRIR PÁGINA DE ESTOQUE</a>
@@ -43,9 +58,9 @@
 
     <section class="bloco">
       <h2>Pedidos em andamento</h2>
-      <p class="etiqueta">Pedidos PENDENTE e PAGO. Confirme o Pix (PAGO), marque como ENVIADO e depois FINALIZADO.</p>
+      <p class="etiqueta">Confirme o pagamento, marque como ENVIADO e depois FINALIZADO. O comprovante enviado pelo cliente fica registrado abaixo.</p>
       <table>
-        <thead><tr><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Total</th><th>Comprovante</th><th>Status</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Pagamento</th><th>Total</th><th>Comprovante</th><th>Status</th><th>Ações</th></tr></thead>
         <tbody id="tabela-pedidos"></tbody>
       </table>
     </section>
@@ -65,7 +80,7 @@
         <span class="etiqueta" id="contador-historico"></span>
       </div>
       <table>
-        <thead><tr><th>Data</th><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Total</th><th>Status</th></tr></thead>
+        <thead><tr><th>Data</th><th>Cliente</th><th>Itens</th><th>Cidade</th><th>Pagamento</th><th>Total</th><th>Status</th></tr></thead>
         <tbody id="tabela-historico"></tbody>
       </table>
     </section>
