@@ -116,9 +116,7 @@ async function carregarUsuarios() {
 async function acao(funcao, mensagemOk) {
   try {
     await funcao();
-    await exigirAdmin().then(function (liberado) {
-  if (liberado) carregarTudo();
-});
+    await carregarTudo();
     mostrarAviso(aviso, mensagemOk || "Alteração salva.", "ok");
   } catch (erro) {
     mostrarAviso(aviso, erro.message, "erro");

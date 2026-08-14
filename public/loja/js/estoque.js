@@ -107,13 +107,13 @@ document.getElementById("form-produto").addEventListener("submit", function (eve
 async function acao(funcao, mensagemOk) {
   try {
     await funcao();
-    await exigirAdmin().then(function (liberado) {
-  if (liberado) carregarProdutos();
-});
+    await carregarProdutos();
     mostrarAviso(aviso, mensagemOk || "Alteração salva.", "ok");
   } catch (erro) {
     mostrarAviso(aviso, erro.message, "erro");
   }
 }
 
-carregarProdutos();
+exigirAdmin().then(function (liberado) {
+  if (liberado) carregarProdutos();
+});
