@@ -25,6 +25,43 @@ async function carregarIndicadores() {
   document.getElementById("kpi-pendentes").textContent = dados.pedidosPendentes;
   document.getElementById("kpi-sem-estoque").textContent = dados.semEstoque;
   document.getElementById("kpi-faturamento").textContent = formatarPreco(dados.faturamento);
+  desenharGrafico("grafico-usuarios", dados.serie || [], "usuarios", "#2563eb");
+  desenharGrafico("grafico-pedidos", dados.serie || [], "pedidos", "#16a34a");
+}
+
+/* Gráfico de barras simples, feito só com Canvas (sem bibliotecas). */
+function desenharGrafico(idCanvas, serie, campo, cor) {
+  const canvas = document.getElementById(idCanvas);
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const largura = canvas.width;
+  const altura = canvas.height;
+  const base = altura - 26;
+  ctx.clearRect(0, 0, largura, altura);
+
+  const maior = Math.max(1, ...serie.map(function (m) { return m[campo]; }));
+  const espaco = largura / Math.max(1, serie.length);
+  const larguraBarra = espaco * 0.5;
+
+  ctx.strokeStyle = "#e5e7eb";
+  ctx.beginPath();
+  ctx.moveTo(0, base);
+  ctx.lineTo(largura, base);
+  ctx.stroke();
+
+  serie.forEach(function (mes, i) {
+    const valor = mes[campo];
+    const alturaBarra = (valor / maior) * (base - 24);
+    const x = i * espaco + (espaco - larguraBarra) / 2;
+    ctx.fillStyle = cor;
+    ctx.fillRect(x, base - alturaBarra, larguraBarra, alturaBarra);
+    ctx.fillStyle = "#111827";
+    ctx.font = "12px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(String(valor), x + larguraBarra / 2, base - alturaBarra - 6);
+    ctx.fillStyle = "#6b7280";
+    ctx.fillText(mes.rotulo, x + larguraBarra / 2, base + 16);
+  });
 }
 
 async function carregarPedidos() {
@@ -34,29 +71,39 @@ async function carregarPedidos() {
   const emAndamento = pedidos.filter(function (p) { return ["PENDENTE", "PAGO", "ENVIADO"].includes(p.status); });
   corpo.innerHTML = emAndamento.map(function (p) {
     const itens = p.itens.map(function (i) { return i.quantidade + "x " + i.nome; }).join(", ");
-    const finalizado = ["CANCELADO", "FINALIZADO"].includes(p.status);
     const comprovante = p.comprovante
-      ? '<a class="btn btn-claro" href="' + p.comprovante + '" target="_blank" rel="noopener">Comprovante</a>'
-      : "—";
-    const opcoes = ["PENDENTE", "PAGO", "ENVIADO", "CANCELADO", "FINALIZADO"].map(function (s) {
-      return '<option value="' + s + '"' + (s === p.status ? " selected" : "") + ">" + s + "</option>";
-    }).join("");
+      ? '<a class="btn btn-claro" href="' + p.comprovante + '" target="_blank" rel="noopener">Ver comprovante</a>'
+      : '<span class="etiqueta">Sem comprovante</span>';
+
+    // Botões diretos, um para cada próximo passo do pedido.
+    let botoes = "";
+    if (p.status === "PENDENTE") {
+      botoes += '<button class="btn" data-status="PAGO" data-pedido="' + p._id + '">CONFIRMAR PAGAMENTO</button> ';
+    }
+    if (p.status === "PENDENTE" || p.status === "PAGO") {
+      botoes += '<button class="btn" data-status="ENVIADO" data-pedido="' + p._id + '">MARCAR COMO ENVIADO</button> ';
+    }
+    if (p.status === "ENVIADO") {
+      botoes += '<button class="btn" data-status="FINALIZADO" data-pedido="' + p._id + '">FINALIZAR</button> ';
+    }
+    botoes += '<button class="btn btn-perigo" data-status="CANCELADO" data-pedido="' + p._id + '">CANCELAR</button>';
+
     return (
       "<tr><td>" + p.nomeUsuario + "</td><td>" + itens + "</td><td>" + (p.cidade || "—") + "</td>" +
+      "<td>" + (p.formaPagamento || "PIX") + "</td>" +
       "<td>" + formatarPreco(p.valorTotal) + "</td><td>" + comprovante + "</td>" +
-      '<td><select data-status-pedido="' + p._id + '"' + (finalizado ? " disabled" : "") + ">" + opcoes + "</select></td>" +
-      '<td>' + (finalizado ? "—" : '<button class="btn" data-aplicar="' + p._id + '">Aplicar</button>') + "</td></tr>"
+      "<td><strong>" + p.status + "</strong></td><td>" + botoes + "</td></tr>"
     );
   }).join("");
   if (emAndamento.length === 0) {
-    corpo.innerHTML = '<tr><td colspan="7">Nenhum pedido em andamento.</td></tr>';
+    corpo.innerHTML = '<tr><td colspan="8">Nenhum pedido em andamento.</td></tr>';
   }
 
-  corpo.querySelectorAll("[data-aplicar]").forEach(function (b) {
+  corpo.querySelectorAll("[data-pedido]").forEach(function (b) {
     b.addEventListener("click", function () {
-      const id = b.getAttribute("data-aplicar");
-      const status = corpo.querySelector('[data-status-pedido="' + id + '"]').value;
-      acao(function () { return ServicoPedidos.alterarStatus(id, status); });
+      const id = b.getAttribute("data-pedido");
+      const status = b.getAttribute("data-status");
+      acao(function () { return ServicoPedidos.alterarStatus(id, status); }, "Pedido atualizado para " + status + ".");
     });
   });
 
@@ -71,13 +118,14 @@ function desenharHistorico() {
   const lista = todosPedidos.filter(function (p) { return filtro === "TODOS" || p.status === filtro; });
   document.getElementById("contador-historico").textContent = lista.length + " pedido(s)";
   corpo.innerHTML = lista.length === 0
-    ? '<tr><td colspan="6">Nenhum pedido encontrado.</td></tr>'
+    ? '<tr><td colspan="7">Nenhum pedido encontrado.</td></tr>'
     : lista.map(function (p) {
         const itens = p.itens.map(function (i) { return i.quantidade + "x " + i.nome; }).join(", ");
         const data = new Date(p.criadoEm).toLocaleString("pt-BR");
         return (
           "<tr><td>" + data + "</td><td>" + p.nomeUsuario + "</td><td>" + itens + "</td>" +
-          "<td>" + (p.cidade || "—") + "</td><td>" + formatarPreco(p.valorTotal) + "</td>" +
+          "<td>" + (p.cidade || "—") + "</td><td>" + (p.formaPagamento || "PIX") + "</td>" +
+          "<td>" + formatarPreco(p.valorTotal) + "</td>" +
           "<td>" + p.status + "</td></tr>"
         );
       }).join("");
