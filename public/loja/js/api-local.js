@@ -270,9 +270,12 @@ async function apiLocal(caminho, config) {
 
     if (metodo === "POST" && !partes[1]) {
       const itens = Array.isArray(corpo.itens) ? corpo.itens : [];
+      const formasAceitas = ["PIX", "CREDITO", "DEBITO"];
+      const forma = String(corpo.formaPagamento || "PIX").toUpperCase();
       if (itens.length === 0) throw erroApi("Seu carrinho está vazio.");
       if (!corpo.cidade) throw erroApi("Selecione a cidade de entrega.");
-      if (!corpo.comprovante) throw erroApi("Envie o comprovante do pagamento Pix.");
+      if (!formasAceitas.includes(forma)) throw erroApi("Forma de pagamento inválida.");
+      if (forma === "PIX" && !corpo.comprovante) throw erroApi("Envie o comprovante do pagamento Pix.");
 
       const itensFinais = [];
       let total = 0;
@@ -308,11 +311,22 @@ async function apiLocal(caminho, config) {
         usuario: usuario._id,
         itens: itensFinais,
         valorTotal: Number(total.toFixed(2)),
-        status: "PENDENTE",
+        status: forma === "PIX" ? "PAGO" : "PENDENTE",
+        formaPagamento: forma,
+        parcelas: forma === "CREDITO" ? Number(corpo.parcelas || 1) : 1,
         cidade: corpo.cidade,
-        comprovante: corpo.comprovante,
+        comprovante: corpo.comprovante || "",
         criadoEm: new Date().toISOString()
       };
+
+      // Conferência do valor: o que a tela mostrou tem que bater com o calculado aqui.
+      if (corpo.valorInformado !== undefined) {
+        const informado = Number(Number(corpo.valorInformado).toFixed(2));
+        if (Math.abs(informado - pedido.valorTotal) > 0.009) {
+          throw erroApi("O valor informado (" + informado + ") não confere com o total do pedido (" + pedido.valorTotal + ").");
+        }
+      }
+
       banco.pedidos.push(pedido);
       gravarBanco(banco);
       return pedido;
@@ -378,13 +392,38 @@ async function apiLocal(caminho, config) {
     const usuario = usuarioDoToken(banco);
     if (usuario.perfil !== "admin") throw erroApi("Acesso restrito a administradores.", 403);
     const pagos = banco.pedidos.filter(function (p) { return p.status !== "CANCELADO"; });
+
+    // Série dos últimos 6 meses para os gráficos do painel.
+    const meses = [];
+    const agora = new Date();
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(agora.getFullYear(), agora.getMonth() - i, 1);
+      const chave = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+      meses.push({
+        chave: chave,
+        rotulo: d.toLocaleDateString("pt-BR", { month: "short" }),
+        usuarios: 0,
+        pedidos: 0
+      });
+    }
+    function somar(lista, campo) {
+      lista.forEach(function (registro) {
+        const chave = String(registro.criadoEm || "").slice(0, 7);
+        const mes = meses.find(function (m) { return m.chave === chave; });
+        if (mes) mes[campo] += 1;
+      });
+    }
+    somar(banco.usuarios, "usuarios");
+    somar(banco.pedidos, "pedidos");
+
     return {
       totalUsuarios: banco.usuarios.length,
       totalProdutos: banco.celulares.length,
       totalPedidos: banco.pedidos.length,
       pedidosPendentes: banco.pedidos.filter(function (p) { return p.status === "PENDENTE"; }).length,
       semEstoque: banco.celulares.filter(function (c) { return c.estoque === 0; }).length,
-      faturamento: pagos.reduce(function (soma, p) { return soma + p.valorTotal; }, 0)
+      faturamento: pagos.reduce(function (soma, p) { return soma + p.valorTotal; }, 0),
+      serie: meses
     };
   }
 
